@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>Desafío VueJS 2</title>
+</head>
+
+<body>
+    <div id="app">
+        <nav class="navbar fixed-top navbar-dark bg-info">
+            <span class="navbar-brand mb-0 h1">Hello, Vue</span>
+            <ul class="navbar-nav ml-auto">
+                <li class='nav-item active'>
+                    <a href="#" class="nav-link" @click="displayCart=true">
+                        Cart {{ cart.length }}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container mt-5">
+            <h1>{{title}}</h1>
+            <product-component :premium="premiumUser" @add-to-cart="addToShoppingCart" :cart="cart" @remove-from-cart="removeFromShoppingCart" ref="product"></product-component>
+
+        </div>
+        <div class="modal" :class="{show: displayCart}" :style="modalStyle" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Resumen de compra</h5>
+                        <button @click="displayCart=false" type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            <li v-for="(item, key, index) in cartCheck">
+                              {{ item }} - {{ key }}
+                            </li>
+                          </ul>
+                        <p></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button @click="emptyCart" type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Vaciar carrito</button>
+                        <button type="button" @click="displayCart=false" class="btn btn-primary">Seguir comprando</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/x-template" id="product-template">
+        <div class="row">
+            <div class="col md-6">
+                <img :src="img" alt="img" class="img-thumbnail">
+            </div>
+            <div class="col md-6">
+                 <h2>{{name}}</h2>   
+                 <p>{{description}}</p>
+                 <p>Stock: {{stock}}</p>
+                 <p v-if='stock > 10'>En Stock</p>
+                 <p v-else-if='stock <= 10 && stock > 0'>¡Quedan muy pocos libros!</p>
+                 <p v-else>Sin Stock</p>
+                 <p>Costo de envío: {{shipping}}</p>
+
+                 <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="inputGroupSelect01">Formato</label>
+                    </div>
+                    <select v-model="selectedFormat" class="custom-select" id="inputGroupSelect01">
+                      <option v-for="format in formats" :value="format">{{format.type}}</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-primary" @click='stock++'>{{stock}}</button>
+                  <button @click="addToCart" :disabled="!hasStock" class="btn btn-success">Agregar al carrito</button>
+                  <button class="btn btn-danger" @click="removeFromCart">Eliminar</button>
+            </div>
+
+        </div>
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="components/product.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
